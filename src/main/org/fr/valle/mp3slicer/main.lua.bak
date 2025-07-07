@@ -1,0 +1,43 @@
+local Song = require("model.song")
+
+local function detect_silences(mp3_path, noise_threshold, duration)
+	print("dans la méthode")
+  local command = string.format(
+    'ffmpeg -i "%s" -af silencedetect=noise=%sdB:d=%s -f null - 2>&1',
+    mp3_path, noise_threshold, duration
+  )
+
+  local handle = io.popen(command)
+  local output = handle:read("*a")
+  handle:close()
+
+  print(string.format("command : %s", command))
+  -- print(string.format("output : %s", output))
+
+  local last_silence_start = nil
+  for line in output:gmatch("[^\r\n]+") do
+    local silence_start = line:match("silence_start: ([%d%.]+)")
+    local silence_end = line:match("silence_end: ([%d%.]+)")
+    if silence_start then
+      last_silence_start = silence_start
+    elseif silence_end and last_silence_start then
+      print(string.format('silence_start "%s" ; silence_end "%s"', last_silence_start, silence_end))
+      last_silence_start = nil
+    end
+  end
+  print("fin de la méthode")
+end
+
+-- Configuration
+local input_mp3 = "data/input.mp3"
+local threshold = -50    -- dB
+local silence_duration = 0.3  -- seconds
+
+print("lancement prog")
+
+-- Lancement
+detect_silences(input_mp3, threshold, silence_duration)
+
+-- Exemple de création d'un objet Song
+local mySong = Song.new(10.5, 12.7, "Titre exemple")
+print(mySong.startTime, mySong.endTime, mySong.title)

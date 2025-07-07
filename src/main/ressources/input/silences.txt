@@ -1,0 +1,14 @@
+silence_start: 147.282789
+silence_end: 148.918299
+silence_start: 581.002109
+silence_end: 582.736122
+silence_start: 884.909592
+silence_end: 886.789365
+silence_start: 1250.945147
+silence_end: 1253.964989
+silence_start: 1398.237823
+silence_end: 1400.993583
+silence_start: 1952.950612
+silence_end: 1954.562676
+silence_start: 2196.486145
+silence_end: 2197.942857

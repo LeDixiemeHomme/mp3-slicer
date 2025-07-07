@@ -1,0 +1,8 @@
+{
+    "Lua.diagnostics.globals": [
+        "read_silences_from_output"
+    ],
+    "files.watcherExclude": {
+        "**/target": true
+    }
+}

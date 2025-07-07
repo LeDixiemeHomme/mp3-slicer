@@ -3,6 +3,7 @@
 /lua_modules
 /.luarocks
 
+*.mp3
 
 # Created by https://www.toptal.com/developers/gitignore/api/lua,visualstudiocode,jetbrains+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=lua,visualstudiocode,jetbrains+all
