@@ -1,6 +1,6 @@
 local Song = require("model.song")
 
-local function detect_silences(mp3_path, noise_threshold, duration)
+local function detect_silences_with_config(mp3_path, noise_threshold, duration)
 	print("dans la méthode")
   local command = string.format(
     'ffmpeg -i "%s" -af silencedetect=noise=%sdB:d=%s -f null - 2>&1',
@@ -36,7 +36,7 @@ local silence_duration = 0.3  -- seconds
 print("lancement prog")
 
 -- Lancement
-detect_silences(input_mp3, threshold, silence_duration)
+detect_silences_with_config(input_mp3, threshold, silence_duration)
 
 -- Exemple de création d'un objet Song
 local mySong = Song.new(10.5, 12.7, "Titre exemple")

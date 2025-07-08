@@ -1,4 +1,5 @@
 local Song = require("src.main.org.fr.valle.mp3slicer.models.song")
+local time_util = require("src.main.org.fr.valle.mp3slicer.utils.time_util")
 
 local Silence = {}
 Silence.__index = Silence
@@ -8,6 +9,17 @@ function Silence.new(startTime, endTime)
     self.startTime = startTime
     self.endTime = endTime
     return self
+end
+
+function Silence:to_string()
+    return string.format("Silence: Start: %s, End: %s", self.startTime or "0", self.endTime or "0")
+end
+
+function Silence:is_too_close_from_time(time_to_compare, time_spacing)
+  -- Compare les temps en HH:MM:SS ou MM:SS
+  local time_in_seconds = time_util.time_to_seconds(self.startTime)
+  local compare_in_seconds = time_util.time_to_seconds(time_to_compare)
+  return math.abs(time_in_seconds - compare_in_seconds) < (time_util.time_to_seconds(time_spacing) or 0.1)
 end
 
 local function make_songs(silences, titles, globalStartTime, globalEndTime)

@@ -1,18 +1,32 @@
 local Silence = require("src.main.org.fr.valle.mp3slicer.models.silence")
 local Song = require("src.main.org.fr.valle.mp3slicer.models.song")
 
-local function split_mp3(input_mp3, songs, output_dir)
+local command_to_format = 'ffmpeg -y -loglevel error -i "%s" -ss %s -to %s -acodec copy "%s"'
+
+local function split_mp3(input_mp3, songs, output_dir, song_duration, max_time_spacing_from_end)
+
+    os.execute('mkdir -p "' .. output_dir .. '"')
+
   for i, song in ipairs(songs) do
     print("traitement split de : ", song.startTime, song.endTime, song.title)
-    if song.startTime and song.endTime and song.title then
+
+    if song:is_too_close_from_time(song_duration, max_time_spacing_from_end) then
+      print("Ignorer car trop proche < :", max_time_spacing_from_end, song:to_string())
+    -- elseif song:is_too_close_from_time("00:00:00", max_time_spacing_from_end) then
+    --   print("Ignorer car trop proche < :", max_time_spacing_from_end, song:to_string())
+    else
       local output_name = string.format("%02d-%s.mp3", i, song.title:gsub(" ", "_"))
       local output_path = output_dir .. "/" .. output_name
       local command = string.format(
-        'ffmpeg -y -i "%s" -ss %s -to %s -acodec copy "%s"',
-        input_mp3, song.startTime, song.endTime, output_path
+        command_to_format, input_mp3, song.startTime, song.endTime, output_path
       )
-      print("Découpage :", command)
-      os.execute(command)
+      print("Découpage : ", command)
+
+      local success, exit_type, exit_code = os.execute(command)
+
+      if not success then
+        print("Erreur Découpage :", exit_type, exit_code, i, song:to_string())
+      end
     end
   end
 end
