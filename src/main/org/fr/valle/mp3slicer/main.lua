@@ -2,6 +2,7 @@ local input_util = require("src.main.org.fr.valle.mp3slicer.utils.input_util")
 local silence_detector = require("src.main.org.fr.valle.mp3slicer.detectors.silence_detector")
 local splitter = require("src.main.org.fr.valle.mp3slicer.providers.splitter")
 local Silence = require("src.main.org.fr.valle.mp3slicer.models.silence")
+local Timecode = require("src.main.org.fr.valle.mp3slicer.models.timecode")
 
 local input_mp3 = "src/main/ressources/data/input Swordlender - Where Heathens Roam.mp3"
 local input_txt = "src/main/ressources/input/starts-and-titles Swordlender - Where Heathens Roam.txt"
@@ -14,8 +15,8 @@ local duration = { min = 0.4, max = 0.5, step = 0.1 }
 -- local input_txt = "src/main/ressources/input/starts-and-titles Swordlender - Struggles of a King.txt"
 -- local song_duration = "00:36:12"
 -- local output_dir = "src/main/ressources/output Swordlender - Struggles of a King"
--- local db = { min = -45, max = -30, step = 5 }
--- local duration = { min = 0.1, max = 0.5, step = 0.1 }
+-- -- local db = { min = -45, max = -30, step = 5 }
+-- -- local duration = { min = 0.1, max = 0.5, step = 0.1 }
 -- local db = { min = -35, max = -30, step = 5 }
 -- local duration = { min = 0.5, max = 0.5, step = 0.1 }
 
@@ -29,7 +30,7 @@ for _, input in ipairs(inputs) do
     table.insert(titles, input.title)
 end
 
-local songs = Silence.make_songs(plausible_silences, titles, "00:00:00", song_duration)
+local songs = Silence.make_songs(plausible_silences, titles, Timecode.fromCmdFormat("00:00:00"), Timecode.fromCmdFormat(song_duration))
 
 -- 3. Découper la chanson
-splitter.split_mp3(input_mp3, songs, output_dir, song_duration, "00:00:30")
+splitter.split_mp3(input_mp3, songs, output_dir, Timecode.fromCmdFormat(song_duration), Timecode.fromCmdFormat("00:00:30"))

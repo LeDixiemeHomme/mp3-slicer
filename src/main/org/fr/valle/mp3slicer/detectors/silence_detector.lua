@@ -1,4 +1,4 @@
-local time_util = require("src.main.org.fr.valle.mp3slicer.utils.time_util")
+local Timecode = require("src.main.org.fr.valle.mp3slicer.models.timecode")
 local Silence = require("src.main.org.fr.valle.mp3slicer.models.silence")
 
 local function read_silences_from_ffmpeg_silence_output(output)
@@ -12,8 +12,8 @@ local function read_silences_from_ffmpeg_silence_output(output)
     elseif silence_end and last_silence_start then
       table.insert(silences, 
         Silence.new(
-          time_util.seconds_to_time(last_silence_start),
-          time_util.seconds_to_time(tonumber(silence_end))
+          Timecode.fromSeconds(last_silence_start),
+          Timecode.fromSeconds(tonumber(silence_end))
         )
       )
       last_silence_start = nil
